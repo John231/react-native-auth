@@ -1,11 +1,11 @@
 import firebase from "firebase";
 import React, { Component } from "react";
 import { View } from "react-native";
-import { Header } from "./components/common";
+import { Header, Button, Spinner, CardSection } from "./components/common";
 import LoginForm from "./components/LoginForm";
 
 class App extends Component {
-  state = { loggedIn: false };
+  state = { loggedIn: null };
 
   componentWillMount() {
     // Initialize Firebase
@@ -25,11 +25,36 @@ class App extends Component {
       }
     });
   }
+  styles = {
+    containerStyle: {
+      height: 100,
+      justifyContent: "space-around"
+    }
+  };
+  renderContent() {
+    switch (this.state.loggedIn) {
+      case true:
+        return (
+          <CardSection>
+            <Button onPress={() => firebase.auth().signOut()}> Log out </Button>
+          </CardSection>
+        );
+      case false:
+        return <LoginForm />;
+      default:
+        return (
+          <View style={this.styles.containerStyle}>
+            <Spinner />
+          </View>
+        );
+    }
+  }
+
   render() {
     return (
       <View>
         <Header headerText="Authentication" />
-        <LoginForm />
+        {this.renderContent()}
       </View>
     );
   }
