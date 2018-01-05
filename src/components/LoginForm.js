@@ -8,13 +8,14 @@ class LoginForm extends Component {
 
   onButtonPress() {
     const { email, password } = this.state;
+    this.setState({ error: "" });
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .catch(() =>
         firebase.auth().createUserWithEmailAndPassword(email, password)
       )
-      .catch(() => this.setState({ error: "authentication failed" }));
+      .catch(() => this.setState({ error: "Authentication Failed" }));
   }
 
   render() {
@@ -39,11 +40,10 @@ class LoginForm extends Component {
             secureTextEntry
           />
         </CardSection>
-
+        <Text style={errorTextStyle}>{this.state.error}</Text>
         <CardSection>
           <Button onPress={this.onButtonPress.bind(this)}> Login </Button>
         </CardSection>
-        <Text style={errorTextStyle}>{this.state.error}</Text>
       </Card>
     );
   }
